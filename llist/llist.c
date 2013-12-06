@@ -2,14 +2,14 @@
 #include <stdlib.h>
 #include <assert.h>
 
-typedef struct intElement {
-  struct intElement* next;
+typedef struct node {
+  struct node* next;
   int data;
-} intElement;
+} node;
 
 typedef struct llist {
-  intElement* head;
-  intElement* tail;
+  node* head;
+  node* tail;
 } llist;
 
 llist* createList(int);
@@ -29,15 +29,15 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-llist* createList(int num) 
+llist* createList(int number) 
 {
   llist *newList = malloc(sizeof(llist));
   assert(newList != NULL);
 
-  intElement* elem = (intElement *) malloc(sizeof(intElement));
+  node* elem = (node *) malloc(sizeof(node));
   assert(elem != NULL);
 
-  elem->data = num;
+  elem->data = number;
   elem->next = NULL;
 
   newList->head = elem;
@@ -45,12 +45,12 @@ llist* createList(int num)
   return newList;
 }
 
-void appendEnd(llist* list, int num)
+void appendEnd(llist* list, int number)
 {
-  intElement* elem = (intElement *) malloc(sizeof(intElement));
+  node* elem = (node *) malloc(sizeof(node));
   assert(elem != NULL);
 
-  elem->data = num;
+  elem->data = number;
   elem->next = NULL;
 
   list->tail->next = elem;
@@ -59,7 +59,7 @@ void appendEnd(llist* list, int num)
 
 void printList(llist* list) 
 {
-  intElement* node;
+  node* node;
 
   node = list->head;
 
