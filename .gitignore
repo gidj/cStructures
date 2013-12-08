@@ -16,5 +16,9 @@
 *.exe
 *.out
 *.app
+
+# Random vim files
+*.swp
+
+# Directory for executables
 bin
-.swp
