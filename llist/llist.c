@@ -1,21 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include "llist.h"
 
 /* A basic singly-linked list implementation for integers. To make many 
  * operations easier, each list has a first element that contains metadata 
  * about the list itself. */ 
-
-typedef struct node {
-  struct node* next;
-  int data;
-} node;
-
-typedef struct llist {
-  node* head;
-  node* tail;
-  int length; 
-} llist;
 
 /* The createNode() and createEmptyList() are basic constructor functions that are 
  * used in the remainder of the functions here. */ 
@@ -48,12 +38,20 @@ llist* createEmptyList()
 
 void destroyNode(node* node)
 {
-
+  free(node);
 }
 
 void destroyList(llist* list)
 {
+  node* head = list->head;
 
+  while(head) {
+    node* temp = head->next;
+    destroyNode(head);
+    head = temp;
+  }
+
+  free(list);
 }
 
 llist* createList(int number) 
@@ -100,9 +98,20 @@ void prepend(llist* list, int number)
   list->length += 1;
 }
 
-node* pop(llist* list)
+int pop(llist* list)
 {
+  int value = list->head->data;
+  node* temp = list->head;
 
+  if (list->head == list->tail)
+  {
+    list->tail = NULL;
+  }
+
+  list->head = list->head->next;
+  destroyNode(temp);
+
+  return value;
 
 }
 
