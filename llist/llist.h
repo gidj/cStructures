@@ -21,4 +21,9 @@ llist* createList(int);
 void destroyNode(node*);
 void destroyList(llist*);
 
+void append(llist*, int);
+void prepend(llist*, int);
+int pop(llist*);
+void printList(llist*);
+
 #endif
