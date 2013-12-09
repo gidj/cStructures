@@ -86,14 +86,13 @@ void append(llist* list, int number)
 
 void prepend(llist* list, int number)
 {
-  node* newNode = createNode(number, NULL);
+  node* newNode = createNode(number, list->head);
 
   if (list->length == 0)
   {
     list->tail = newNode;
   }
 
-  newNode->next = list->head;
   list->head = newNode;
   list->length += 1;
 }
@@ -112,17 +111,16 @@ int pop(llist* list)
   destroyNode(temp);
 
   return value;
-
 }
 
 void printList(llist* list) 
 {
   node* node;
-
   node = list->head;
 
-  while(node != NULL) {
-    printf("%d\n", node->data);
+  while(node) {
+    printf("%d, ", node->data);
     node = node->next;
   }
+  printf("\n");
 }
