@@ -22,5 +22,8 @@ void set_value(node*, int);
 void set_left(node*, node*);
 void set_right(node*, node*);
 
+void print_preorder(node* tree);
+void print_inorder(node* tree);
+void print_postorder(node* tree);
 
 #endif

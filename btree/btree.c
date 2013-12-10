@@ -64,3 +64,37 @@ void set_right(node* tree, node* child)
   tree->right = child;
 }
 
+/* Printing functions */ 
+
+void print_preorder(node* tree)
+{
+  if (tree)
+  {
+    printf("%d\n", get_value(tree));
+    print_preorder(get_left(tree));
+    print_preorder(get_right(tree));
+  }
+}
+
+void print_inorder(node* tree)
+{
+  if (tree)
+  {
+    print_inorder(get_left(tree));
+    printf("%d\n", get_value(tree));
+    print_inorder(get_right(tree));
+  }
+}
+
+void print_postorder(node* tree)
+{
+  if (tree)
+  {
+    print_postorder(get_left(tree));
+    print_postorder(get_right(tree));
+    printf("%d\n", get_value(tree));
+  }
+}
+
+
+
