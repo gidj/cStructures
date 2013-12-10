@@ -1,5 +1,5 @@
-#ifndef LLIST_H
-#define LLIST_H 
+#ifndef LLIST_H_
+#define LLIST_H_
 
 typedef struct node
 {
