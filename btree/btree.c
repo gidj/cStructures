@@ -1,4 +1,11 @@
+/* A simple binary tree data structure for integers. Any node of the tree
+ * can be acted upon like another tree itself. Lower integers are stored on
+ * the left, and higher integers are stored on the right. */ 
+
 #include "btree.h"
+
+/* Constructor function create_tree and destructor function destroy_tree 
+ * abstract away the details of how we create and destroy the tree. */ 
 
 node* create_tree(int value)
 {
@@ -23,6 +30,8 @@ void destroy_tree(node* tree)
   }
 }
 
+/* Selector functions. */ 
+
 int get_value(node* tree)
 {
   return tree->value;
@@ -37,6 +46,8 @@ node* get_right(node* tree)
 {
   return tree->right;
 }
+
+/* Functions to set the values of the tree variables*/ 
 
 void set_value(node* tree, int value)
 {
