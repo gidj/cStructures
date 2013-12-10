@@ -96,5 +96,22 @@ void print_postorder(node* tree)
   }
 }
 
+/* Search function that returns the node containing the given object of 
+ * interest, or NULL if it cannot be found. */ 
 
+node* search_tree(node* tree, int query)
+{
+  if (!tree)
+  {
+    return NULL;
+  }  
 
+  if (query == get_value(tree))
+  {
+    return tree;
+  } else if (query < get_value(tree)) {
+    return search_tree(get_left(tree), query);
+  } else {
+    return search_tree(get_right(tree), query);
+  }
+}
