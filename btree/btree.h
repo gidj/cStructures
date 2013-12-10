@@ -11,7 +11,7 @@ typedef struct node {
     int value;
 } node;
 
-node* create_tree(int);
+node* create_tree(int, node*, node*);
 void  destory_tree(node*);
 
 int get_value(node*);
@@ -27,4 +27,6 @@ void print_inorder(node* tree);
 void print_postorder(node* tree);
 
 node* search_tree(node*, int);
+void insert(node*, int);
+
 #endif

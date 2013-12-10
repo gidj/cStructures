@@ -7,14 +7,16 @@
 /* Constructor function create_tree and destructor function destroy_tree 
  * abstract away the details of how we create and destroy the tree. */ 
 
-node* create_tree(int value)
+node* create_tree(int value,
+                  node* left,
+                  node* right)
 {
   node* new_node = (node*) malloc(sizeof(node));
   assert(new_node != NULL);
 
   set_value(new_node, value);
-  set_left(new_node, NULL);
-  set_right(new_node, NULL);
+  set_left(new_node, left);
+  set_right(new_node, right);
 
   return new_node;
 }
@@ -115,3 +117,11 @@ node* search_tree(node* tree, int query)
     return search_tree(get_right(tree), query);
   }
 }
+
+void insert(node* tree, int value)
+{
+
+
+}
+
+
