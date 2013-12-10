@@ -26,4 +26,5 @@ void print_preorder(node* tree);
 void print_inorder(node* tree);
 void print_postorder(node* tree);
 
+node* search_tree(node*, int);
 #endif
