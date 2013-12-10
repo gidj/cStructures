@@ -27,6 +27,6 @@ void print_inorder(node* tree);
 void print_postorder(node* tree);
 
 node* search_tree(node*, int);
-void insert(node*, int);
+node* insert(node*, int);
 
 #endif

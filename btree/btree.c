@@ -118,10 +118,40 @@ node* search_tree(node* tree, int query)
   }
 }
 
-void insert(node* tree, int value)
+/* Insert function which recursively searches the tree and its children for the
+ * value to be inserted; if found, it returns a pointer to the node at which 
+ * the value resides in memory; if not found, a new node is created, inserted 
+ * at the appropriate place in the tree, and then the function returns a
+ * pointer to that node. 
+ * In that both search_tree() and insert() both return a reference to the node
+ * of interest, they are similar; in the use case that you know you will need 
+ * to insert a value into a tree if it isn't found, insert() works better than 
+ * searching first, and then inserting if not found. */ 
+
+node* insert(node* tree, int value)
 {
-
-
+  if (value == get_value(tree))
+  {
+    return tree;
+  }
+  else if (value < get_value(tree))
+  {
+    if (get_left(tree) == NULL)
+    {
+      set_left(tree, create_tree(value, NULL, NULL));
+      return get_left(tree);
+    } else {
+      return insert(get_left(tree), value);
+    }
+  } else {
+    if (get_right(tree) == NULL)
+    {
+      set_right(tree, create_tree(value, NULL, NULL));
+      return get_right(tree);
+    } else {
+      return insert(get_right(tree), value);
+    }
+  }
 }
 
 
