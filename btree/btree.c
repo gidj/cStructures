@@ -86,13 +86,42 @@ node* min(node* tree)
 
 node* max(node* tree)
 {
-  if (tree == NULL)
-  {
-    return tree;
-  } else if (right(tree) == NULL) {
+  assert(tree);
+
+  if (right(tree) == NULL) {
     return tree;
   } else {
     return max(right(tree));
+  }
+}
+
+node* min_parent(node* tree)
+{
+  assert(tree);
+  assert(left(tree));
+
+  if (left(left(tree)) == NULL)
+  {
+    return tree;
+  }
+  else
+  {
+    return min_parent(left(tree));
+  }
+}
+
+node* max_parent(node* tree)
+{
+  assert(tree);
+  assert(right(tree));
+
+  if (right(right(tree)) == NULL)
+  {
+    return tree;
+  }
+  else
+  {
+    return min_parent(right(tree));
   }
 }
 
@@ -232,10 +261,13 @@ node* delete_data(node* tree, int value)
   }
   else if (value < data(tree))
   {
-    return create_tree(data(tree), delete_data(left(tree), value), right(tree));
-  } else 
+    set_left(tree, delete_data(left(tree), value));
+    return tree;
+  } 
+  else 
   {
-    return create_tree(data(tree), left(tree), delete_data(right(tree), value));
+    set_right(tree, delete_data(right(tree), value));
+    return tree;
   }
 }
 

@@ -24,6 +24,8 @@ void set_right(node*, node*);
 
 node* min(node*);
 node* max(node*);
+node* min_parent(node*);
+node* max_parent(node*);
 
 void print_preorder(node* tree);
 void print_inorder(node* tree);
