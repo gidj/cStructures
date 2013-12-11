@@ -14,7 +14,7 @@ node* create_tree(int value,
   node* new_node = (node*) malloc(sizeof(node));
   assert(new_node != NULL);
 
-  set_value(new_node, value);
+  set_data(new_node, value);
   set_left(new_node, left);
   set_right(new_node, right);
 
@@ -25,8 +25,8 @@ void destroy_tree(node* tree)
 {
   if (tree)
   {
-    destroy_tree(get_left(tree));
-    destroy_tree(get_right(tree));
+    destroy_tree(left(tree));
+    destroy_tree(right(tree));
 
     free(tree);
   }
@@ -34,26 +34,26 @@ void destroy_tree(node* tree)
 
 /* Selector functions. */ 
 
-int get_value(node* tree)
+int data(node* tree)
 {
-  return tree->value;
+  return tree->data;
 }
 
-node* get_left(node* tree)
+node* left(node* tree)
 {
   return tree->left;
 }
 
-node* get_right(node* tree)
+node* right(node* tree)
 {
   return tree->right;
 }
 
 /* Functions to set the values of the tree variables*/ 
 
-void set_value(node* tree, int value)
+void set_data(node* tree, int value)
 {
-  tree->value = value;
+  tree->data = value;
 }
 
 void set_left(node* tree, node* child)
@@ -66,15 +66,45 @@ void set_right(node* tree, node* child)
   tree->right = child;
 }
 
+/* min() and max() functions to return a pointer to the node with the minimum 
+ * and maximum values, respectively. */ 
+
+node* min(node* tree)
+{
+  if (tree == NULL)
+  {
+     /* ToDo: currently this function returns a NULL pointer if the tree is empty;
+      * later, create an error handling routine to return an error instead to signal
+      * that there are no elementes in the tree. */ 
+    return tree;
+  } else if (left(tree) == NULL) {
+    return tree;
+  } else {
+    return min(left(tree));
+  }
+}
+
+node* max(node* tree)
+{
+  if (tree == NULL)
+  {
+    return tree;
+  } else if (right(tree) == NULL) {
+    return tree;
+  } else {
+    return max(right(tree));
+  }
+}
+
 /* Printing functions */ 
 
 void print_preorder(node* tree)
 {
   if (tree)
   {
-    printf("%d\n", get_value(tree));
-    print_preorder(get_left(tree));
-    print_preorder(get_right(tree));
+    printf("%d\n", data(tree));
+    print_preorder(left(tree));
+    print_preorder(right(tree));
   }
 }
 
@@ -82,9 +112,9 @@ void print_inorder(node* tree)
 {
   if (tree)
   {
-    print_inorder(get_left(tree));
-    printf("%d\n", get_value(tree));
-    print_inorder(get_right(tree));
+    print_inorder(left(tree));
+    printf("%d\n", data(tree));
+    print_inorder(right(tree));
   }
 }
 
@@ -92,9 +122,9 @@ void print_postorder(node* tree)
 {
   if (tree)
   {
-    print_postorder(get_left(tree));
-    print_postorder(get_right(tree));
-    printf("%d\n", get_value(tree));
+    print_postorder(left(tree));
+    print_postorder(right(tree));
+    printf("%d\n", data(tree));
   }
 }
 
@@ -108,13 +138,13 @@ node* search_tree(node* tree, int query)
     return NULL;
   }  
 
-  if (query == get_value(tree))
+  if (query == data(tree))
   {
     return tree;
-  } else if (query < get_value(tree)) {
-    return search_tree(get_left(tree), query);
+  } else if (query < data(tree)) {
+    return search_tree(left(tree), query);
   } else {
-    return search_tree(get_right(tree), query);
+    return search_tree(right(tree), query);
   }
 }
 
@@ -130,28 +160,37 @@ node* search_tree(node* tree, int query)
 
 node* insert(node* tree, int value)
 {
-  if (value == get_value(tree))
+  if (value == data(tree))
   {
     return tree;
   }
-  else if (value < get_value(tree))
+  else if (value < data(tree))
   {
-    if (get_left(tree) == NULL)
+    if (left(tree) == NULL)
     {
       set_left(tree, create_tree(value, NULL, NULL));
-      return get_left(tree);
+      return left(tree);
     } else {
-      return insert(get_left(tree), value);
+      return insert(left(tree), value);
     }
   } else {
-    if (get_right(tree) == NULL)
+    if (right(tree) == NULL)
     {
       set_right(tree, create_tree(value, NULL, NULL));
-      return get_right(tree);
+      return right(tree);
     } else {
-      return insert(get_right(tree), value);
+      return insert(right(tree), value);
     }
   }
 }
 
+node* delete_node(node* tree)
+{
+
+}
+
+node* delete_data(node* tree, int value)
+{
+
+}
 
