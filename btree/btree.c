@@ -95,6 +95,11 @@ node* max(node* tree)
   }
 }
 
+/* min_parent() and max_parent() are primarily used as helper functions to 
+ * delete_node(), as keeping track of the parent of the min or max node 
+ * allows us to delete the min or max node while changing the appropriate 
+ * pointer in the parent. */ 
+
 node* min_parent(node* tree)
 {
   assert(tree);
