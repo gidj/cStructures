@@ -184,13 +184,58 @@ node* insert(node* tree, int value)
   }
 }
 
+/* delete_node() is primarily a helper function to delete_data(). There are three 
+ * major cases: (1) the node has no children; (2) the node has only one child; 
+ * and (3) the node has two children. There is also the unlikely case that the 
+ * pointer is simply NULL, and it returns NULL if that is so. */ 
+
 node* delete_node(node* tree)
 {
+  if (tree == NULL)
+  {
+    return NULL;
+  }
+  else if (!left(tree) && !right(tree))
+  {
+    free(tree);
+    return NULL;
+  }
+  else if (!left(tree))
+  {
+    node* temp = right(tree);
+    free(tree);
+    return temp;
+  }
+  else if (!right(tree))
+  {
+    node* temp = left(tree);
+    free(tree);
+    return temp;
+  } else
+  {
 
+  }
 }
+
+/* */ 
 
 node* delete_data(node* tree, int value)
 {
+  if (tree == NULL)
+  {
+    return NULL;
+  }
 
+  if (data(tree) == value)
+  {
+    return delete_node(tree);
+  }
+  else if (value < data(tree))
+  {
+    return create_tree(data(tree), delete_data(left(tree), value), right(tree));
+  } else 
+  {
+    return create_tree(data(tree), left(tree), delete_data(right(tree), value));
+  }
 }
 
