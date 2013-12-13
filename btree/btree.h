@@ -33,7 +33,7 @@ void print_postorder(node* tree);
 
 node* search_tree(node*, int);
 node* insert(node*, int);
-node* delete_node(node*);
+node* delete_node(node**);
 node* delete_data(node*, int);
 
 #endif

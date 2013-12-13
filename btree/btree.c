@@ -223,7 +223,7 @@ node* insert(node* tree, int value)
  * and (3) the node has two children. There is also the unlikely case that the 
  * pointer is simply NULL, and it returns NULL if that is so. */ 
 
-node* delete_node(node* tree)
+node* delete_node(node** tree)
 {
   if (tree == NULL)
   {
@@ -247,6 +247,7 @@ node* delete_node(node* tree)
     return temp;
   } else
   {
+
 
   }
 }
