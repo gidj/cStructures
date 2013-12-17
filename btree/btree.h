@@ -24,8 +24,6 @@ void set_right(node*, node*);
 
 node* min(node*);
 node* max(node*);
-node* min_parent(node*);
-node* max_parent(node*);
 
 void print_preorder(node* tree);
 void print_inorder(node* tree);
@@ -33,7 +31,7 @@ void print_postorder(node* tree);
 
 node* search_tree(node*, int);
 node* insert(node*, int);
-node* delete_node(node**);
-node* delete_data(node*, int);
+void delete_node(node**);
+void delete_data(node*, int);
 
 #endif

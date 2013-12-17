@@ -95,41 +95,6 @@ node* max(node* tree)
   }
 }
 
-/* min_parent() and max_parent() are primarily used as helper functions to 
- * delete_node(), as keeping track of the parent of the min or max node 
- * allows us to delete the min or max node while changing the appropriate 
- * pointer in the parent. */ 
-
-node* min_parent(node* tree)
-{
-  assert(tree);
-  assert(left(tree));
-
-  if (left(left(tree)) == NULL)
-  {
-    return tree;
-  }
-  else
-  {
-    return min_parent(left(tree));
-  }
-}
-
-node* max_parent(node* tree)
-{
-  assert(tree);
-  assert(right(tree));
-
-  if (right(right(tree)) == NULL)
-  {
-    return tree;
-  }
-  else
-  {
-    return min_parent(right(tree));
-  }
-}
-
 /* Printing functions */ 
 
 void print_preorder(node* tree)
@@ -175,9 +140,13 @@ node* search_tree(node* tree, int query)
   if (query == data(tree))
   {
     return tree;
-  } else if (query < data(tree)) {
+  } 
+  else if (query < data(tree)) 
+  {
     return search_tree(left(tree), query);
-  } else {
+  } 
+  else 
+  {
     return search_tree(right(tree), query);
   }
 }
@@ -223,28 +192,28 @@ node* insert(node* tree, int value)
  * and (3) the node has two children. There is also the unlikely case that the 
  * pointer is simply NULL, and it returns NULL if that is so. */ 
 
-node* delete_node(node** tree)
+void delete_node(node** tree)
 {
   if (tree == NULL)
   {
-    return NULL;
   }
-  else if (!left(tree) && !right(tree))
+  else if (!left(*tree) && !right(*tree))
   {
-    free(tree);
-    return NULL;
+    node* temp = *tree;
+    (*tree) = NULL;
+    free(temp);
   }
-  else if (!left(tree))
+  else if (!left(*tree))
   {
-    node* temp = right(tree);
-    free(tree);
-    return temp;
+    node* temp = *tree;
+    (*tree) = right(*tree);
+    free(temp);
   }
-  else if (!right(tree))
+  else if (!right(*tree))
   {
-    node* temp = left(tree);
-    free(tree);
-    return temp;
+    node* temp = *tree;
+    (*tree) = left(*tree);
+    free(temp);
   } else
   {
 
@@ -254,26 +223,11 @@ node* delete_node(node** tree)
 
 /* */ 
 
-node* delete_data(node* tree, int value)
+void delete_data(node* tree, int value)
 {
-  if (tree == NULL)
-  {
-    return NULL;
-  }
-
   if (data(tree) == value)
   {
-    return delete_node(tree);
-  }
-  else if (value < data(tree))
-  {
-    set_left(tree, delete_data(left(tree), value));
-    return tree;
-  } 
-  else 
-  {
-    set_right(tree, delete_data(right(tree), value));
-    return tree;
+    delete_node(&tree);
   }
 }
 
