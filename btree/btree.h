@@ -30,7 +30,7 @@ void print_inorder(node* tree);
 void print_postorder(node* tree);
 
 node* search_tree(node*, int);
-node* insert(node*, int);
+void insert(node**, int);
 void delete_node(node**);
 void delete_data(node*, int);
 
