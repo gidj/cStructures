@@ -211,7 +211,29 @@ void delete_node(node** tree)
   } else
   {
 
+/* The final case, where there are two children to the node to be deleted. 
+ * We find the successor, which is simply the node with the minimum key value
+ * on the right side of the tree. If that success is ALSO the right child of 
+ * tree, then it is a simple case of simply 'moving' the right child to take
+ * the place of the head of tree. If the successor is in the right subtree but
+ * is NOT the right child, the data from successor is moved into the head of 
+ * tree, and then successor's own right child takes its place. This is done
+ * via a recursive calle to the delete_node() function, as it nicely fits one
+ * of the above cases. */ 
 
+    node* successor = min(right(*tree));
+
+    if (successor == right(*tree))
+    {
+      set_data(*tree, data(successor));
+      set_right(*tree, right(successor));
+      free(successor);
+    }
+    else
+    {
+      set_data(*tree, data(successor));
+      delete_node(&successor);
+    }
   }
 }
 
@@ -219,9 +241,7 @@ void delete_node(node** tree)
 
 void delete_data(node* tree, int value)
 {
-  if (data(tree) == value)
-  {
-    delete_node(&tree);
-  }
+  node* element = search_tree(tree, value);
+  delete_node(&element);
 }
 
