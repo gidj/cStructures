@@ -11,27 +11,27 @@ typedef struct node {
     int data;
 } node;
 
-node* create_tree(int, node*, node*);
-void  destory_tree(node*);
+extern node* create_tree(int, node*, node*);
+extern void  destory_tree(node*);
 
-int data(node*);
-node* left(node*);
-node* right(node*);
+extern int data(node*);
+extern node* left(node*);
+extern node* right(node*);
 
-void set_data(node*, int);
-void set_left(node*, node*);
-void set_right(node*, node*);
+extern void set_data(node*, int);
+extern void set_left(node*, node*);
+extern void set_right(node*, node*);
 
-node* min(node*);
-node* max(node*);
+extern node* min(node*);
+extern node* max(node*);
 
-void print_preorder(node* tree);
-void print_inorder(node* tree);
-void print_postorder(node* tree);
+extern void print_preorder(node* tree);
+extern void print_inorder(node* tree);
+extern void print_postorder(node* tree);
 
-node* search_tree(node*, int);
-void insert(node**, int);
-void delete_node(node**);
-void delete_data(node*, int);
+extern node* search_tree(node*, int);
+extern void insert(node**, int);
+extern void delete_node(node**);
+extern void delete_data(node*, int);
 
 #endif

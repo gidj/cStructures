@@ -184,7 +184,7 @@ void insert(node** tree, int value)
 /* delete_node() is primarily a helper function to delete_data(). There are three 
  * major cases: (1) the node has no children; (2) the node has only one child; 
  * and (3) the node has two children. There is also the unlikely case that the 
- * pointer is simply NULL, and it returns NULL if that is so. */ 
+ * pointer is simply NULL. */ 
 
 void delete_node(node** tree)
 {
