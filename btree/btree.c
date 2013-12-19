@@ -4,14 +4,20 @@
 
 #include "btree.h"
 
+struct node {
+    struct node *left;
+    struct node *right;
+    int data;
+};
+
 /* Constructor function create_tree and destructor function destroy_tree 
  * abstract away the details of how we create and destroy the tree. */ 
 
-node* create_tree(int value,
-                  node* left,
-                  node* right)
+node create_tree(int value,
+                  node left,
+                  node right)
 {
-  node* new_node = (node*) malloc(sizeof(node));
+  node new_node = (node) malloc(sizeof(node));
   assert(new_node != NULL);
 
   set_data(new_node, value);
@@ -21,7 +27,7 @@ node* create_tree(int value,
   return new_node;
 }
 
-void destroy_tree(node* tree)
+void destroy_tree(node tree)
 {
   if (tree)
   {
@@ -34,34 +40,34 @@ void destroy_tree(node* tree)
 
 /* Selector functions. */ 
 
-int data(node* tree)
+int data(node tree)
 {
   return tree->data;
 }
 
-node* left(node* tree)
+node left(node tree)
 {
   return tree->left;
 }
 
-node* right(node* tree)
+node right(node tree)
 {
   return tree->right;
 }
 
 /* Functions to set the values of the tree variables*/ 
 
-void set_data(node* tree, int value)
+void set_data(node tree, int value)
 {
   tree->data = value;
 }
 
-void set_left(node* tree, node* child)
+void set_left(node tree, node child)
 {
   tree->left = child;
 }
 
-void set_right(node* tree, node* child)
+void set_right(node tree, node child)
 {
   tree->right = child;
 }
@@ -69,7 +75,7 @@ void set_right(node* tree, node* child)
 /* min() and max() functions to return a pointer to the node with the minimum 
  * and maximum values, respectively. */ 
 
-node* min(node* tree)
+node min(node tree)
 {
   if (tree == NULL)
   {
@@ -84,7 +90,7 @@ node* min(node* tree)
   }
 }
 
-node* max(node* tree)
+node max(node tree)
 {
   assert(tree);
 
@@ -97,7 +103,7 @@ node* max(node* tree)
 
 /* Printing functions */ 
 
-void print_preorder(node* tree)
+void print_preorder(node tree)
 {
   if (tree)
   {
@@ -107,7 +113,7 @@ void print_preorder(node* tree)
   }
 }
 
-void print_inorder(node* tree)
+void print_inorder(node tree)
 {
   if (tree)
   {
@@ -117,7 +123,7 @@ void print_inorder(node* tree)
   }
 }
 
-void print_postorder(node* tree)
+void print_postorder(node tree)
 {
   if (tree)
   {
@@ -130,7 +136,7 @@ void print_postorder(node* tree)
 /* Search function that returns the node containing the given object of 
  * interest, or NULL if it cannot be found. */ 
 
-node* search_tree(node* tree, int query)
+node search_tree(node tree, int query)
 {
   if (!tree)
   {
@@ -157,7 +163,7 @@ node* search_tree(node* tree, int query)
  * leaf, a new node is created with the provided value and it is inserted in
  * place of the NULL node. */ 
 
-void insert(node** tree, int value)
+void insert(node* tree, int value)
 {
   if ((*tree) == NULL)
   {
@@ -186,26 +192,26 @@ void insert(node** tree, int value)
  * and (3) the node has two children. There is also the unlikely case that the 
  * pointer is simply NULL. */ 
 
-void delete_node(node** tree)
+void delete_node(node* tree)
 {
   if (tree == NULL)
   {
   }
   else if (!left(*tree) && !right(*tree))
   {
-    node* temp = *tree;
+    node temp = *tree;
     (*tree) = NULL;
     free(temp);
   }
   else if (!left(*tree))
   {
-    node* temp = *tree;
+    node temp = *tree;
     (*tree) = right(*tree);
     free(temp);
   }
   else if (!right(*tree))
   {
-    node* temp = *tree;
+    node temp = *tree;
     (*tree) = left(*tree);
     free(temp);
   } else
@@ -221,7 +227,7 @@ void delete_node(node** tree)
  * via a recursive calle to the delete_node() function, as it nicely fits one
  * of the above cases. */ 
 
-    node* successor = min(right(*tree));
+    node successor = min(right(*tree));
 
     if (successor == right(*tree))
     {
@@ -239,9 +245,9 @@ void delete_node(node** tree)
 
 /* */ 
 
-void delete_data(node* tree, int value)
+void delete_data(node tree, int value)
 {
-  node* element = search_tree(tree, value);
+  node element = search_tree(tree, value);
   delete_node(&element);
 }
 
