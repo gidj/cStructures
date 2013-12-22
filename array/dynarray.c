@@ -72,3 +72,24 @@ void *array_put(array array, int i, void *elem)
   return elem;
 }
 
+void array_resize(array array, int size)
+{
+
+}
+
+array array_copy(array array)
+{
+  assert(array);
+  array copy = array_create(array->length, array->size);
+  
+  if (copy->length >= array->length && array->length > 0)
+  {
+    memcpy(copy->arr, array->arr, array->length*array->size); 
+  }
+  else if (array->length > copy->length && copy->length > 0)
+  {
+    memcpy(copy->arr, array->arr, copy->length*array->size); 
+  }
+
+  return copy;
+}
