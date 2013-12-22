@@ -72,9 +72,51 @@ void *array_put(array array, int i, void *elem)
   return elem;
 }
 
-void array_resize(array array, int size)
+void *array_put_auto(array array, int i, void * elem)
 {
+  assert(array);
+  assert(elem);
 
+  if (i >= array->length)
+  {
+    array_resize(array, (array->size * 2));
+  }
+
+  memcpy(array->arr + (array->size * i), elem, array->size);
+  return elem;
+}
+
+void array_resize(array array, int length)
+{
+  assert(array);
+
+  if (length == 0)
+  {
+    free(array->arr);
+    array->arr = NULL;
+  }
+  else if (array->length == 0) 
+  {
+    array->arr = calloc(length, array->size);
+    assert(array->arr);
+  }
+  else 
+  {
+    array->arr = realloc(array->arr, length*array->size);
+    
+     /* Because realloc() doesn't guarantee that new memory blocks will be 
+      * filled with zeros like the called to calloc() does when the array is 
+      * first formed, set all subsequent bytes in the array to 0.
+      * */ 
+
+    if (length > array->length)
+    {
+      int diff = length - array->length;
+      memset(array->arr + array->length*array->size, 0, diff*array->size);
+    }
+
+    array->length = length;
+  }
 }
 
 array array_copy(array source)
