@@ -77,18 +77,18 @@ void array_resize(array array, int size)
 
 }
 
-array array_copy(array array)
+array array_copy(array source)
 {
-  assert(array);
-  array copy = array_create(array->length, array->size);
+  assert(source);
+  array copy = array_create(source->length,source->size);
   
-  if (copy->length >= array->length && array->length > 0)
+  if (copy->length >= source->length && source->length > 0)
   {
-    memcpy(copy->arr, array->arr, array->length*array->size); 
+    memcpy(copy->arr, source->arr, source->length*source->size); 
   }
-  else if (array->length > copy->length && copy->length > 0)
+  else if (source->length > copy->length && copy->length > 0)
   {
-    memcpy(copy->arr, array->arr, copy->length*array->size); 
+    memcpy(copy->arr, source->arr, copy->length*source->size); 
   }
 
   return copy;
