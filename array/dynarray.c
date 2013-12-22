@@ -1,6 +1,7 @@
 #include "dynarray.h"
 #include <assert.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct array {
   int length;
@@ -56,7 +57,18 @@ int array_size(array array)
 
 void *array_get(array array, int i)
 {
-  assert(array && i >= 0);
-  assert(i < array->length);
+  assert(array);
+  assert(i >= 0 && i < array->length);
   return array->arr + (array->size * i);
 }
+
+void *array_put(array array, int i, void *elem)
+{
+  assert(array);
+  assert(i >= 0 && i < array->length);
+
+  assert(elem);
+  memcpy(array->arr + (array->size * i), elem, array->size);
+  return elem;
+}
+
