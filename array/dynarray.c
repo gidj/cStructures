@@ -12,7 +12,7 @@ array array_create(int length, int size)
 {
   assert(length >= 0);
 
-  array new_array = malloc(sizeof(array));
+  array new_array = malloc(sizeof(*new_array));
   assert(new_array);
 
   new_array->size = size;
@@ -52,4 +52,11 @@ int array_size(array array)
 {
   assert(array);
   return array->size;
+}
+
+void *array_get(array array, int i)
+{
+  assert(array && i >= 0);
+  assert(i < array->length);
+  return array->arr + (array->size * i);
 }
