@@ -4,7 +4,7 @@
 typedef struct node
 {
     struct node* next;
-    int data;
+    void *data;
 } node;
 
 typedef struct llist
@@ -15,15 +15,14 @@ typedef struct llist
 } llist;
 
 
-node* createNode(int, node*);
+node* createNode(void *elem, node* nextNode);
 llist* createEmptyList();
-llist* createList(int);
-void destroyNode(node*);
-void destroyList(llist*);
+llist* createList(void *elem);
+void destroyNode(node** node);
+void destroyList(llist* list);
 
-void append(llist*, int);
-void prepend(llist*, int);
-int pop(llist*);
-void printList(llist*);
+void append(llist*, void *elem);
+void prepend(llist*, void *elem);
+void* pop(llist*);
 
 #endif

@@ -10,12 +10,12 @@
 /* The createNode() and createEmptyList() are basic constructor functions that are 
  * used in the remainder of the functions here. */ 
 
-node* createNode(int number, node* nextNode)
+node* createNode(void *elem, node* nextNode)
 {
-  node* newNode = (node *) malloc(sizeof(node));
-  assert(newNode != NULL);
+  node* newNode = malloc(sizeof(node));
+  assert(newNode);
 
-  newNode->data = number;
+  newNode->data = elem;
   newNode->next = nextNode;
 
   return newNode;
@@ -24,7 +24,7 @@ node* createNode(int number, node* nextNode)
 llist* createEmptyList() 
 {
   llist *newList = malloc(sizeof(llist));
-  assert(newList != NULL);
+  assert(newList);
 
   newList->head = NULL;
   newList->tail = NULL;
@@ -36,9 +36,11 @@ llist* createEmptyList()
 /* The destroyNode() and destroyList() are destructor methods that make sure 
  * the memory that is allocated to a list is freed properly. */ 
 
-void destroyNode(node* node)
+void destroyNode(node** dead)
 {
-  free(node);
+  node* temp = *dead;
+  (*dead) = (*dead)->next;
+  free(temp);
 }
 
 void destroyList(llist* list)
@@ -47,17 +49,17 @@ void destroyList(llist* list)
 
   while(head) {
     node* temp = head->next;
-    destroyNode(head);
+    free(head);
     head = temp;
   }
 
   free(list);
 }
 
-llist* createList(int number) 
+llist* createList(void *elem) 
 {
   llist* newList = createEmptyList();
-  node* newNode = createNode(number, NULL);
+  node* newNode = createNode(elem, NULL);
   
   newList->head = newNode;
   newList->tail = newNode;
@@ -69,9 +71,9 @@ llist* createList(int number)
 /* append() and prepend() insert a new node with the value 'number' into the 
  * linked list 'list' */ 
 
-void append(llist* list, int number)
+void append(llist* list, void *elem)
 {
-  node* newNode = createNode(number, NULL);
+  node* newNode = createNode(elem, NULL);
 
   if (list->length == 0) 
   {
@@ -84,9 +86,9 @@ void append(llist* list, int number)
   list->length += 1;
 }
 
-void prepend(llist* list, int number)
+void prepend(llist* list, void *elem)
 {
-  node* newNode = createNode(number, list->head);
+  node* newNode = createNode(elem, list->head);
 
   if (list->length == 0)
   {
@@ -97,9 +99,9 @@ void prepend(llist* list, int number)
   list->length += 1;
 }
 
-int pop(llist* list)
+void* pop(llist* list)
 {
-  int value = list->head->data;
+  void* value = list->head->data;
   node* temp = list->head;
 
   if (list->head == list->tail)
@@ -108,19 +110,8 @@ int pop(llist* list)
   }
 
   list->head = list->head->next;
-  destroyNode(temp);
+  free(temp);
 
   return value;
 }
 
-void printList(llist* list) 
-{
-  node* node;
-  node = list->head;
-
-  while(node) {
-    printf("%d, ", node->data);
-    node = node->next;
-  }
-  printf("\n");
-}

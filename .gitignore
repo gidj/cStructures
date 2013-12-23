@@ -20,5 +20,6 @@
 # Random vim files
 *.swp
 
-# Directory for executables
+# Directory 
 bin
+examples
