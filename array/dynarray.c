@@ -104,10 +104,10 @@ void array_resize(array array, int length)
   {
     array->arr = realloc(array->arr, length*array->size);
     
-     /* Because realloc() doesn't guarantee that new memory blocks will be 
-      * filled with zeros like the called to calloc() does when the array is 
-      * first formed, set all subsequent bytes in the array to 0.
-      * */ 
+ /* Because realloc() doesn't guarantee that new memory blocks will be 
+  * filled with zeros like the called to calloc() does when the array is 
+  * first formed, set all subsequent bytes in the array to 0.
+  * */ 
 
     if (length > array->length)
     {
