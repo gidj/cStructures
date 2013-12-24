@@ -3,7 +3,7 @@
 #include <assert.h>
 #include "llist.h"
 
-/* A basic singly-linked list implementation for integers. To make many 
+/* A basic singly-linked list implementation for generic types. To make many 
  * operations easier, each list has a first element that contains metadata 
  * about the list itself. */ 
 

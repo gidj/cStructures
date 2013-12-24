@@ -79,7 +79,7 @@ void *array_put_auto(array array, int i, void * elem)
 
   if (i >= array->length)
   {
-    array_resize(array, (array->size * 2));
+    array_resize(array, (array->length * 2));
   }
 
   memcpy(array->arr + (array->size * i), elem, array->size);
@@ -114,9 +114,8 @@ void array_resize(array array, int length)
       int diff = length - array->length;
       memset(array->arr + array->length*array->size, 0, diff*array->size);
     }
-
-    array->length = length;
   }
+  array->length = length;
 }
 
 array array_copy(array source)
