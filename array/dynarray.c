@@ -9,6 +9,10 @@ struct array {
   char * arr;
 };
 
+/* array_create() and array_free() are the methods for creating and cleaning 
+ * up our array object. array_create() takes the number of objects that the 
+ * initial array can hold, and the size of that object in bytes. */ 
+
 array array_create(int length, int size)
 {
   assert(length >= 0);
@@ -55,6 +59,14 @@ int array_size(array array)
   return array->size;
 }
 
+/* array_get(), array_put(), and array_put_auto() access the underlying array
+ * and either get the value at the given index or put the object pointed to via
+ * 'elem' into the array at the given index. It is a checked runtime error to 
+ * give an index to either array_get() or array_put() that is outside the 
+ * bounds of the array length, but array_put_auto() will automatically resize
+ * the array if given an index that is greater than the current length of the 
+ * array. */ 
+
 void *array_get(array array, int i)
 {
   assert(array);
@@ -86,6 +98,11 @@ void *array_put_auto(array array, int i, void * elem)
   return elem;
 }
 
+/* If the new length given is less than the current length of the array given,
+ * then the given array is truncated to the new length; if the new length is 
+ * greater than the old length, the array is expanded to the new length and 
+ * the new memory is written over with 0's. */ 
+
 void array_resize(array array, int length)
 {
   assert(array);
@@ -104,11 +121,6 @@ void array_resize(array array, int length)
   {
     array->arr = realloc(array->arr, length*array->size);
     
- /* Because realloc() doesn't guarantee that new memory blocks will be 
-  * filled with zeros like the called to calloc() does when the array is 
-  * first formed, set all subsequent bytes in the array to 0.
-  * */ 
-
     if (length > array->length)
     {
       int diff = length - array->length;
