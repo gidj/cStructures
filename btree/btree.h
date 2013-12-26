@@ -7,16 +7,18 @@
 
 typedef struct node *node;
 
-extern node create_tree(int value,
+extern node create_tree(int key,
+                        void* value,
                         node left, 
                         node right);
 extern void  destory_tree(node tree);
 
-extern int data(node tree);
+extern void* value(node tree);
 extern node left(node tree);
 extern node right(node tree);
 
-extern void set_data(node tree, int value);
+extern void set_key(node tree, int key);
+extern void set_value(node tree, void* value);
 extern void set_left(node tree, node child);
 extern void set_right(node tree, node child);
 

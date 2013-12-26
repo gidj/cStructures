@@ -5,22 +5,25 @@
 #include "btree.h"
 
 struct node {
+    int key;
+    void* value;
     struct node *left;
     struct node *right;
-    int data;
 };
 
 /* Constructor function create_tree and destructor function destroy_tree 
  * abstract away the details of how we create and destroy the tree. */ 
 
-node create_tree(int value,
+node create_tree(int key, 
+                  void* value,
                   node left,
                   node right)
 {
   node new_node = (node) malloc(sizeof(node));
   assert(new_node != NULL);
 
-  set_data(new_node, value);
+  set_key(new_node, key);
+  set_value(node tree, void* value);
   set_left(new_node, left);
   set_right(new_node, right);
 
@@ -40,9 +43,9 @@ void destroy_tree(node tree)
 
 /* Selector functions. */ 
 
-int data(node tree)
+int key(node tree)
 {
-  return tree->data;
+  return tree->key;
 }
 
 node left(node tree)
@@ -57,9 +60,9 @@ node right(node tree)
 
 /* Functions to set the values of the tree variables*/ 
 
-void set_data(node tree, int value)
+void set_key(node tree, int value)
 {
-  tree->data = value;
+  tree->key = value;
 }
 
 void set_left(node tree, node child)
