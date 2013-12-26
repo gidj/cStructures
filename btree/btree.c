@@ -3,6 +3,7 @@
  * the left, and higher integers are stored on the right. */ 
 
 #include "btree.h"
+#include <stdlib.h>
 
 struct node {
     int key;
@@ -68,6 +69,10 @@ void key_set(node tree, int key)
 void value_set(node tree, void* value)
 {
   assert(tree && value);
+  if (sizeof(tree->value) != sizeof(*value))
+  {
+    tree->value = realloc(tree->value, sizeof(*value));
+  }
   memcpy(tree->value, value, sizeof(*value));
 }
 
@@ -178,14 +183,14 @@ void insert(node *tree, int key, void* value)
   {
     (*tree) = create_tree(key, value, NULL, NULL);
   }
-  else if (key < key(*tree))
+  else if ((*tree)->key > key)
   {
-    *tree = left(*tree);
+    tree = &((*tree)->left);
     insert(tree, key, value);
   } 
-  else if (key > key(*tree)) 
+  else if ((*tree)->key < key) 
   {
-    *tree = right(*tree);
+    tree = &((*tree)->right);
     insert(tree, key, value);
   }
   else 
