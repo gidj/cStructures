@@ -15,17 +15,17 @@ struct node {
  * abstract away the details of how we create and destroy the tree. */ 
 
 node create_tree(int key, 
-                  void* value,
-                  node left,
-                  node right)
+                 void* value,
+                 node left,
+                 node right)
 {
   node new_node = (node) malloc(sizeof(node));
-  assert(new_node != NULL);
+  assert(new_node);
 
-  set_key(new_node, key);
-  set_value(node tree, void* value);
-  set_left(new_node, left);
-  set_right(new_node, right);
+  key_set(new_node, key);
+  value_set(new_node, value);
+  left_set(new_node, left);
+  right_set(new_node, right);
 
   return new_node;
 }
@@ -60,17 +60,23 @@ node right(node tree)
 
 /* Functions to set the values of the tree variables*/ 
 
-void set_key(node tree, int value)
+void key_set(node tree, int key)
 {
-  tree->key = value;
+  tree->key = key;
 }
 
-void set_left(node tree, node child)
+void value_set(node tree, void* value)
+{
+  assert(tree && value);
+  memcpy(tree->value, value, sizeof(*value));
+}
+
+void left_set(node tree, node child)
 {
   tree->left = child;
 }
 
-void set_right(node tree, node child)
+void right_set(node tree, node child)
 {
   tree->right = child;
 }
@@ -110,7 +116,7 @@ void print_preorder(node tree)
 {
   if (tree)
   {
-    printf("%d\n", data(tree));
+    printf("%d\n", value(tree));
     print_preorder(left(tree));
     print_preorder(right(tree));
   }
@@ -146,7 +152,7 @@ node search_tree(node tree, int query)
     return NULL;
   }  
 
-  if (query == data(tree))
+  if (query == key(tree))
   {
     return tree;
   } 
@@ -166,21 +172,21 @@ node search_tree(node tree, int query)
  * leaf, a new node is created with the provided value and it is inserted in
  * place of the NULL node. */ 
 
-void insert(node* tree, int value)
+void insert(node *tree, int key, void* value)
 {
   if ((*tree) == NULL)
   {
-    (*tree) = create_tree(value, NULL, NULL);
+    (*tree) = create_tree(key, value, NULL, NULL);
   }
-  else if (value < data(*tree))
+  else if (key < key(*tree))
   {
     *tree = left(*tree);
-    insert(tree, value);
+    insert(tree, key, value);
   } 
-  else if (value > data(*tree)) 
+  else if (key > key(*tree)) 
   {
     *tree = right(*tree);
-    insert(tree, value);
+    insert(tree, key, value);
   }
   else 
   {
@@ -195,27 +201,30 @@ void insert(node* tree, int value)
  * and (3) the node has two children. There is also the unlikely case that the 
  * pointer is simply NULL. */ 
 
-void delete_node(node* tree)
+void delete_node(node* n)
 {
-  if (tree == NULL)
+  if (n == NULL)
   {
   }
-  else if (!left(*tree) && !right(*tree))
+  else if (!left(*n) && !right(*n))
   {
-    node temp = *tree;
-    (*tree) = NULL;
+    node temp = *n;
+    (*n) = NULL;
+    free(temp->value);
     free(temp);
   }
-  else if (!left(*tree))
+  else if (!left(*n))
   {
-    node temp = *tree;
-    (*tree) = right(*tree);
+    node temp = *n;
+    (*n) = right(*n);
+    free(temp->value);
     free(temp);
   }
-  else if (!right(*tree))
+  else if (!right(*n))
   {
-    node temp = *tree;
-    (*tree) = left(*tree);
+    node temp = *n;
+    (*n) = left(*n);
+    free(temp->value);
     free(temp);
   } else
   {
@@ -230,17 +239,20 @@ void delete_node(node* tree)
  * via a recursive calle to the delete_node() function, as it nicely fits one
  * of the above cases. */ 
 
-    node successor = min(right(*tree));
+    node successor = min(right(*n));
 
-    if (successor == right(*tree))
+    if (successor == right(*n))
     {
-      set_data(*tree, data(successor));
-      set_right(*tree, right(successor));
+      key_set(*n, key(successor));
+      value_set(*n, value(successor));
+      right_set(*n, right(successor));
+      free(successor->value);
       free(successor);
     }
     else
     {
-      set_data(*tree, data(successor));
+      key_set(*n, key(successor));
+      value_set(*n, value(successor));
       delete_node(&successor);
     }
   }
@@ -248,9 +260,9 @@ void delete_node(node* tree)
 
 /* */ 
 
-void delete_data(node tree, int value)
+void delete_value(node tree, int key)
 {
-  node element = search_tree(tree, value);
+  node element = search_tree(tree, key);
   delete_node(&element);
 }
 
