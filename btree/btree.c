@@ -161,11 +161,27 @@ void node_delete(Node *node)
     else
     {
       Node successor = min_node(current->right);
+      if ((*node)->right == successor)
+      {
+        Node temp = *node;
+        successor->left = (*node)->left;
+        *node = successor;
 
+        free(temp->value);
+        free(temp);
+        return;
+      }
+      else
+      {
+        (*node)->key = successor->key;
+        (*node)->value = successor->value;
+        (*node)->elementSize = successor->elementSize;
+
+        tree_delete((*node)->right, successor->key);
+        return;
+      }
     }
-      
   }
-
 }
 
 Node node_left(Node node)
