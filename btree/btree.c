@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 struct Node {
   int key;
@@ -16,11 +17,13 @@ Node tree_create(int key, void* value, int elementSize, Node left, Node right)
   assert(elementSize > 0);
   
   Node node = malloc(sizeof(*node));
-  node->key = key;
-  node->value = malloc(elementSize);
-  memcpy(node->value, value, elementSize);
-  node->left = left;
-  node->right = right;
+  assert(node);
+
+  set_key(node, key);
+  set_value(node, value, elementSize);
+  set_elementSize(node, elementSize);
+  set_left(node, left);
+  set_right(node, right);
 
   return node;
 }
@@ -81,9 +84,8 @@ void tree_insert(Node tree, int key, void* value, int elementSize)
 
   if (key == current->key)
   {
-    current->value = realloc(current->value, elementSize);
-    memcpy(current->value, value, elementSize);
-    current->elementSize = elementSize;
+    set_value(current, value, elementSize);
+    set_elementSize(current, elementSize);
     return;
   } 
   else if (key < current->key)
@@ -94,7 +96,7 @@ void tree_insert(Node tree, int key, void* value, int elementSize)
     } 
     else
     {
-      current->left = tree_create(key, value, elementSize, NULL, NULL);
+      set_left(current, tree_create(key, value, elementSize, NULL, NULL));
       return;
     }
   } 
@@ -106,27 +108,27 @@ void tree_insert(Node tree, int key, void* value, int elementSize)
     }
     else
     {
-      current->right = tree_create(key, value, elementSize, NULL, NULL);
+      set_right(current, tree_create(key, value, elementSize, NULL, NULL));
       return;
     }
   }
 }
 
-void tree_delete(Node tree, int key)
+void tree_delete(Node *tree, int key)
 {
-  if (tree)
+  if (*tree)
   {
-    if (key == tree->key)
+    if (key == (*tree)->key)
     {
-      node_delete(&tree);
+      node_delete(tree);
     }
-    else if (key < tree->key)
+    else if (key < (*tree)->key)
     {
-      tree_delete(tree->left, key);
+      tree_delete(&(*tree)->left, key);
     }
-    else if (key > tree->key)
+    else if (key > (*tree)->key)
     {
-      tree_delete(tree->right, key);
+      tree_delete(&(*tree)->right, key);
     }
   }
   return;
@@ -138,33 +140,44 @@ void node_delete(Node *node)
   {
     Node current = *node;
     
-    if (!current->left && !current->right)
+    if (!node_left(*node) && !node_right(*node))
     {
-      tree_destroy(current);
+      Node tmp = *node;
       *node = NULL;
+      free(node_value(tmp));
+      free(tmp);
       return;
     }
-    else if (!current->left)
+    else if (!node_left(*node))
     {
-      *node = current->right;
-      free(current->value);
-      free(current);
+      Node tmp = *node;
+      *node = node_right(*node);
+      free(tmp->value);
+      free(tmp);
       return;
     }
-    else if (!current->right)
+    else if (!node_right(*node))
     {
-      *node = current->left;
-      free(current->value);
-      free(current);
+      Node tmp = *node;
+      *node = node_left(*node);
+      free(tmp->value);
+      free(tmp);
       return;
     }
     else
     {
-      Node successor = min_node(current->right);
-      if ((*node)->right == successor)
+      Node successor = node_right((*node));
+      Node successorParent = (*node);
+
+      while(successor->left) {
+        successorParent = successor;
+        successor = node_left(successor);
+      }
+
+      if (node_right(*node) == successor)
       {
         Node temp = *node;
-        successor->left = (*node)->left;
+        set_left(successor, node_left(*node));
         *node = successor;
 
         free(temp->value);
@@ -173,47 +186,95 @@ void node_delete(Node *node)
       }
       else
       {
-        (*node)->key = successor->key;
-        (*node)->value = successor->value;
-        (*node)->elementSize = successor->elementSize;
+        set_left(successorParent, node_right(successor));
+        set_left(successor, node_left(*node));
+        set_right(successor, node_right(*node));
 
-        tree_delete((*node)->right, successor->key);
+        Node temp = *node;
+        *node = successor;
+        
+        free(temp->value);
+        free(temp);
+
+        /*set_key(*node, successor->key);*/
+        /*set_elementSize(*node, successor->elementSize);*/
+        /*set_value(*node, node_value(successor), node_elementSize(successor));*/
+
+        /*free(successor->value);*/
+        /*free(successor);*/
+
         return;
       }
     }
   }
 }
 
+/* Helper functions that get and set values in Node types.*/ 
+
+int node_key(Node node)
+{ return node->key; }
+
+void* node_value(Node node)
+{ return node->value; }
+
+int  node_elementSize(Node node)
+{ return node->elementSize; }
+
 Node node_left(Node node)
-{
-  return node->left;
-}
+{ return node->left; }
 
 Node node_right(Node node)
-{
-  return node->right;
+{ return node->right; }
+
+void set_key(Node node, int key)
+{ node->key = key; }
+
+void set_value(Node node, void* value, int elementSize)
+{ 
+  void* tmp = realloc(node->value, elementSize);
+
+  if (tmp) 
+  { 
+    node->value = tmp; 
+  }
+  else 
+  { 
+    printf("Memory allocation failed. Exiting...\n");
+    exit(EXIT_FAILURE); 
+  }
+
+  memcpy(node->value, value, elementSize);
 }
 
-Node min_node(Node tree)
+void set_elementSize(Node node, int size)
+{ node->elementSize = size; }
+
+void set_left(Node node, Node child)
+{ node->left = child; }
+
+void set_right(Node node, Node child)
+{ node->right = child; }
+
+Node* min_node(Node* tree)
 {
   assert(tree);
-  Node current = tree;
+  assert(*tree);
   
-  while(current->left) {
-    current = current->left;
+  while((*tree)->left) {
+    tree = &(*tree)->left;
   }
-  return current;
+  return tree;
 }
 
-Node max_node(Node tree)
+Node* max_node(Node* tree)
 {
   assert(tree);
-  Node current = tree;
-  
-  while(current->right) {
-    current = current->right;
+  assert(*tree);
+
+  while((*tree)->right) {
+    tree = &(*tree)->right;
   }
-  return current;
+  return tree;
 }
 
 void* node_data(Node node)
