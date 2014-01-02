@@ -29,5 +29,4 @@ extern Node* min_node(Node *tree);
 extern Node* max_node(Node *tree);
 extern void node_delete(Node *node);
 
-extern void* node_data(Node node);
 #endif

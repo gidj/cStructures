@@ -11,6 +11,9 @@ struct Node {
   Node left, right;
 };
 
+/* tree_create() gives us a tree, preppted with the given parameters. tree_destroy
+ * recursively frees all nodes and all data associated with the nodes. */ 
+
 Node tree_create(int key, void* value, int elementSize, Node left, Node right)
 {
   assert(value);
@@ -41,6 +44,10 @@ void tree_destroy(Node tree)
   if (right) { tree_destroy(right); }
 }
 
+/* min_value() and max_value() return pointers to the data being stored in the
+ * nodes with the minimum and maximum key values, repectively. It is up to the
+ * programmer to dereference the pointer through an appropriate cast. */ 
+
 void* min_value(Node tree)
 {
   assert(tree);
@@ -63,6 +70,10 @@ void* max_value(Node tree)
   return current->value;
 }
 
+/* Given a key to search for in the given tree, tree_search returns a pointer 
+ * to the value associated with that key, or NULL if the key is not in the
+ * tree. */ 
+
 void* tree_search(Node tree, int key)
 {
   assert(tree);
@@ -76,6 +87,10 @@ void* tree_search(Node tree, int key)
 
   return NULL;
 }
+
+/* tree_insert() searches until it either finds the given key in the tree and
+ * replaces the value of that node with the given value, or reaches a leaf and
+ * creates a new node with the given key and value. */ 
 
 void tree_insert(Node tree, int key, void* value, int elementSize)
 {
@@ -114,6 +129,10 @@ void tree_insert(Node tree, int key, void* value, int elementSize)
   }
 }
 
+/* tree_delete() takes a pointer to a tree type and a key to search for; if the
+ * key is found in the tree, that node is removed from the tree. If the key is 
+ * not found, nothing happens. */ 
+
 void tree_delete(Node *tree, int key)
 {
   if (*tree)
@@ -134,12 +153,17 @@ void tree_delete(Node *tree, int key)
   return;
 }
 
+/* node_delete() does the heavy lifting for tree_delete. It takes a pointer
+ * to a node object and then determines which of three cases the node falls
+ * into:
+ * (1) No children; deletion is straightforward. 
+ * (2) One child; the child node simply replaces the node to be deleted.
+ * (3) Two children; the node to be deleted is replaced by its successor.*/
+
 void node_delete(Node *node)
 {
   if (*node)
   {
-    Node current = *node;
-    
     if (!node_left(*node) && !node_right(*node))
     {
       Node tmp = *node;
@@ -196,13 +220,6 @@ void node_delete(Node *node)
         free(temp->value);
         free(temp);
 
-        /*set_key(*node, successor->key);*/
-        /*set_elementSize(*node, successor->elementSize);*/
-        /*set_value(*node, node_value(successor), node_elementSize(successor));*/
-
-        /*free(successor->value);*/
-        /*free(successor);*/
-
         return;
       }
     }
@@ -244,6 +261,7 @@ void set_value(Node node, void* value, int elementSize)
   }
 
   memcpy(node->value, value, elementSize);
+  set_elementSize(node, elementSize);
 }
 
 void set_elementSize(Node node, int size)
@@ -277,7 +295,3 @@ Node* max_node(Node* tree)
   return tree;
 }
 
-void* node_data(Node node)
-{
-  return node->value;
-}
