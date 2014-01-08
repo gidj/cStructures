@@ -2,9 +2,10 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 struct Array {
-  int length;
+  size_t length;
   int size;
   char * arr;
 };
@@ -13,7 +14,7 @@ struct Array {
  * up our array object. array_create() takes the number of objects that the 
  * initial array can hold, and the size of that object in bytes. */ 
 
-Array array_create(int length, int size)
+Array array_create(size_t length, int size)
 {
   assert(length >= 0);
 
@@ -67,14 +68,14 @@ int array_size(Array array)
  * the array if given an index that is greater than the current length of the 
  * array. */ 
 
-void *array_get(Array array, int i)
+void *array_get(Array array, size_t i)
 {
   assert(array);
   assert(i >= 0 && i < array->length);
   return array->arr + (array->size * i);
 }
 
-void *array_put(Array array, int i, void *elem)
+void *array_put(Array array, size_t i, void *elem)
 {
   assert(array);
   assert(i >= 0 && i < array->length);
@@ -84,14 +85,15 @@ void *array_put(Array array, int i, void *elem)
   return elem;
 }
 
-void *array_put_auto(Array array, int i, void * elem)
+void *array_put_auto(Array array, size_t i, void * elem)
 {
   assert(array);
   assert(elem);
 
   if (i >= array->length)
   {
-    array_resize(array, (array->length * 2));
+    size_t newLength = (i > array->length*2) ? i : array->length*2;
+    array_resize(array, (newLength));
   }
 
   memcpy(array->arr + (array->size * i), elem, array->size);
@@ -103,7 +105,7 @@ void *array_put_auto(Array array, int i, void * elem)
  * greater than the old length, the array is expanded to the new length and 
  * the new memory is written over with 0's. */ 
 
-void array_resize(Array array, int length)
+void array_resize(Array array, size_t length)
 {
   assert(array);
 
@@ -119,6 +121,17 @@ void array_resize(Array array, int length)
   }
   else 
   {
+    void* tmp = realloc(array->arr, length*array->size);
+    if (tmp)
+    {
+      array->arr = tmp;
+    }
+    else
+    {
+      printf("Couldn't allocate memory; Exiting...\n");
+      exit(EXIT_FAILURE);
+    }
+
     array->arr = realloc(array->arr, length*array->size);
     
     if (length > array->length)
