@@ -23,7 +23,7 @@
 
 typedef struct Heap *Heap;
 
-extern Heap heap_init(size_t length, int size, int (*compare)(void*, void*));
+extern Heap heap_init(int size, int (*compare)(void*, void*));
 extern void heap_free(Heap h);
 extern void heap_push(Heap h, void* element);
 extern void* heap_pop(Heap h);

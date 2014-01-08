@@ -42,6 +42,20 @@ void list_destroy(List list)
   free(list);
 }
 
+void list_destroy_pointer(List *list)
+{
+  assert(list && *list);
+  Node current;
+
+  while((*list)->head) {
+    current = (*list)->head;
+    (*list)->head = current->next;
+    free(current->data);
+    free(current);
+  }
+
+  free(*list);
+}
 void list_append(List list, void *element)
 {
   assert(list);
@@ -115,6 +129,11 @@ void* list_tail(List list, void *element)
   assert(list->tail);
   memcpy(element, list->tail->data, list->elementSize);
   return element;
+}
+
+void* list_peek(List list)
+{
+  return list->head->data;
 }
 
 void* node_data(Node node)

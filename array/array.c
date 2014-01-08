@@ -7,7 +7,7 @@
 struct Array {
   size_t length;
   int size;
-  char * arr;
+  void * arr;
 };
 
 /* array_create() and array_free() are the methods for creating and cleaning 
