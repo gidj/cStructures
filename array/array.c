@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct array {
+struct Array {
   int length;
   int size;
   char * arr;
@@ -13,11 +13,11 @@ struct array {
  * up our array object. array_create() takes the number of objects that the 
  * initial array can hold, and the size of that object in bytes. */ 
 
-array array_create(int length, int size)
+Array array_create(int length, int size)
 {
   assert(length >= 0);
 
-  array new_array = malloc(sizeof(*new_array));
+  Array new_array = malloc(sizeof(*new_array));
   assert(new_array);
 
   new_array->size = size;
@@ -36,7 +36,7 @@ array array_create(int length, int size)
   return new_array;
 }
 
-void array_free(array *array)
+void array_free(Array *array)
 {
   assert(array && *array);
   if ((*array)->arr)
@@ -47,13 +47,13 @@ void array_free(array *array)
   free(*array);
 }
 
-int array_length(array array)
+int array_length(Array array)
 {
   assert(array);
   return array->length;
 }
 
-int array_size(array array)
+int array_size(Array array)
 {
   assert(array);
   return array->size;
@@ -67,14 +67,14 @@ int array_size(array array)
  * the array if given an index that is greater than the current length of the 
  * array. */ 
 
-void *array_get(array array, int i)
+void *array_get(Array array, int i)
 {
   assert(array);
   assert(i >= 0 && i < array->length);
   return array->arr + (array->size * i);
 }
 
-void *array_put(array array, int i, void *elem)
+void *array_put(Array array, int i, void *elem)
 {
   assert(array);
   assert(i >= 0 && i < array->length);
@@ -84,7 +84,7 @@ void *array_put(array array, int i, void *elem)
   return elem;
 }
 
-void *array_put_auto(array array, int i, void * elem)
+void *array_put_auto(Array array, int i, void * elem)
 {
   assert(array);
   assert(elem);
@@ -103,7 +103,7 @@ void *array_put_auto(array array, int i, void * elem)
  * greater than the old length, the array is expanded to the new length and 
  * the new memory is written over with 0's. */ 
 
-void array_resize(array array, int length)
+void array_resize(Array array, int length)
 {
   assert(array);
 
@@ -130,10 +130,10 @@ void array_resize(array array, int length)
   array->length = length;
 }
 
-array array_copy(array source)
+Array array_copy(Array source)
 {
   assert(source);
-  array copy = array_create(source->length,source->size);
+  Array copy = array_create(source->length,source->size);
   
   if (copy->length >= source->length && source->length > 0)
   {
