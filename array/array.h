@@ -15,6 +15,7 @@ extern void *array_put(Array array, size_t i, void *elem);
 extern void *array_put_auto(Array array, size_t i, void *elem);
 
 extern void array_resize(Array array, size_t length);
+extern void array_swap(Array array, size_t i, size_t j);
 extern Array array_copy(Array source);
 
 #endif

@@ -10,6 +10,17 @@ struct Heap {
   int (*cmp)();
 };
 
+/* Helper functions that define the parent and children 'nodes' of the heap */ 
+
+static size_t parent(size_t i) { return (i - 1) / 2; }
+static size_t left(size_t i) { return 2*i + 1; }
+static size_t right(size_t i) { return 2*i + 2; }
+
+static void upheap(Heap h, size_t parent, size_t child);
+static void downheap(Heap h, size_t parent, size_t child);
+
+
+
 extern Heap heap_init(int elementSize, int (*compare)(void*, void*))
 {
   assert(elementSize > 0);

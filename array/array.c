@@ -143,6 +143,28 @@ void array_resize(Array array, size_t length)
   array->length = length;
 }
 
+void array_swap(Array array, size_t i, size_t j)
+{
+  assert(array);
+  assert(array->arr);
+  assert(i < array->length);
+  assert(j < array->length);
+
+  if (i == j)
+  {
+    return;
+  }
+
+  void *tmp = malloc(array->size);
+  assert(tmp);
+
+  memcpy(tmp, array_get(array, i), array->size);
+  memcpy(array_get(array, i), array_get(array, j), array->size);
+  memcpy(array_get(array, j), tmp, array->size);
+  
+  free(tmp);
+}
+
 Array array_copy(Array source)
 {
   assert(source);
