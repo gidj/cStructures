@@ -2,7 +2,11 @@
  * This implements a Heap as an abstract data structure. 
  *
  * heap_init() returns an empty heap; one can define either a min- or max-heap
- * by passing the appropriate compare function.
+ * by passing the appropriate compare function. The compare function must take
+ * two void pointers as parameters and must return 1 if the two elements are in 
+ * the right order, 0 if they are equal, and -1 if they must switch places. All
+ * other returned values constitute a checked runtime error and will exit the 
+ * program.
  *
  * heap_push() adds a value to the given heap
  * 
@@ -24,7 +28,7 @@
 typedef struct Heap *Heap;
 
 extern Heap heap_init(int size, int (*compare)(void*, void*));
-extern void heap_free(Heap h);
+extern void heap_free(Heap *h);
 extern void heap_push(Heap h, void* element);
 extern void* heap_pop(Heap h);
 extern void* heap_peek(Heap h);

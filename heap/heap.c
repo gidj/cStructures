@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include "heap.h"
 #include "../array/array.h"
@@ -12,14 +13,44 @@ struct Heap {
 
 /* Helper functions that define the parent and children 'nodes' of the heap */ 
 
-static size_t parent(size_t i) { return (i - 1) / 2; }
-static size_t left(size_t i) { return 2*i + 1; }
-static size_t right(size_t i) { return 2*i + 2; }
+static size_t parent_i(size_t i) { return (i - 1) / 2; }
+static size_t left_i(size_t i) { return 2*i + 1; }
+static size_t right_i(size_t i) { return 2*i + 2; }
 
-static void upheap(Heap h, size_t parent, size_t child);
-static void downheap(Heap h, size_t parent, size_t child);
+static void upheap(Heap h, size_t node)
+{
+  size_t parent = parent_i(node);
+  size_t child = node;
+  
+  switch(h->cmp(array_get(h->data_array, parent),
+                array_get(h->data_array, child)))
+  {
+    case -1:
+      array_swap(h->data_array, parent, child);
+
+      if (parent > 0)
+      {
+        upheap(h, parent);
+      }
+      return;
+    case 1:
+      return;
+    case 0:
+      return;
+    default:
+      printf("Something went wrong in the comparison; exiting...\n");
+      exit(EXIT_FAILURE);
+  }
+}
+
+static void downheap(Heap h, size_t node)
+{
+  size_t parent = node;
+  size_t l = left_i(node);
+  size_t r = right_i(node);
 
 
+}
 
 extern Heap heap_init(int elementSize, int (*compare)(void*, void*))
 {
@@ -36,11 +67,13 @@ extern Heap heap_init(int elementSize, int (*compare)(void*, void*))
   return h;
 }
 
-extern void heap_free(Heap h)
+extern void heap_free(Heap *h)
 {
-  assert(h);
-  array_free(&(h->data_array));
-  free(h);
+  assert(h && *h);
+  void* arr = (*h)->data_array;
+  array_free(arr);
+  free(*h);
+  *h = NULL;
 }
 
 extern void heap_push(Heap h, void* element)
