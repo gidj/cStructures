@@ -27,22 +27,7 @@ List list_new(int elementSize)
   return new_list;
 }
 
-void list_destroy(List list)
-{
-  assert(list);
-  Node current;
-
-  while(list->head) {
-    current = list->head;
-    list->head = current->next;
-    free(current->data);
-    free(current);
-  }
-
-  free(list);
-}
-
-void list_destroy_pointer(List *list)
+void list_destroy(List *list)
 {
   assert(list && *list);
   Node current;
@@ -55,7 +40,9 @@ void list_destroy_pointer(List *list)
   }
 
   free(*list);
+  *list = NULL;
 }
+
 void list_append(List list, void *element)
 {
   assert(list);

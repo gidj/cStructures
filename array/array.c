@@ -46,6 +46,7 @@ void array_free(Array *array)
   }
 
   free(*array);
+  *array = NULL;
 }
 
 int array_length(Array array)

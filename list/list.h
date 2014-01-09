@@ -7,8 +7,7 @@ typedef struct List *List;
 typedef struct Node *Node;
 
 extern List list_new(int elementSize);
-extern void list_destroy(List list);
-extern void list_destroy_pointer(List *list);
+extern void list_destroy(List *list);
 
 extern void list_append(List list, void *element);
 extern void list_prepend(List list, void *element);
