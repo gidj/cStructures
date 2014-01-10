@@ -45,11 +45,36 @@ static void upheap(Heap h, size_t node)
 
 static void downheap(Heap h, size_t node)
 {
+
+/* Revise this to check whether the indices for left and right children are 
+ * out of bounds for the heap at the BEGINNING of the function. It will make 
+ * the logic cleaner. */ 
+
   size_t parent = node;
   size_t l = left_i(node);
   size_t r = right_i(node);
+  void* array = h->data_array;
 
-
+  if (h->cmp(array_get(array, parent), array_get(array, l)) == -1 || 
+      h->cmp(array_get(array, parent), array_get(array, r)) == -1)
+  {
+    if (h->cmp(array_get(array, l), array_get(array, r)) == 1)
+    {
+      array_swap(array, parent, l);
+      if (left_i(l) < h->length)
+      {
+        downheap(h, l);
+      }
+    }
+    else
+    {
+      array_swap(array, parent, r);
+      if (right_i(r) < h->length)
+      {
+        downheap(h, r);
+      }
+    }
+  }
 }
 
 extern Heap heap_init(int elementSize, int (*compare)(void*, void*))
