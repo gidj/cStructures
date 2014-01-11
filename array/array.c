@@ -101,18 +101,6 @@ void* array_put_auto(Array a, size_t i, void * elem)
   return elem;
 }
 
-void* array_append(Array a, void *elem)
-{
-  array_put(a, a->length, elem);
-  return elem;
-}
-
-void* array_append_auto(Array a, void *elem)
-{
-  array_put_auto(a, a->length, elem);
-  return elem;
-}
-
 /* If the new length given is less than the current length of the array given,
  * then the given array is truncated to the new length; if the new length is 
  * greater than the old length, the array is expanded to the new length and 

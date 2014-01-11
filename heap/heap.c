@@ -45,34 +45,67 @@ static void upheap(Heap h, size_t node)
 
 static void downheap(Heap h, size_t node)
 {
-
-/* Revise this to check whether the indices for left and right children are 
- * out of bounds for the heap at the BEGINNING of the function. It will make 
- * the logic cleaner. */ 
-
   size_t parent = node;
-  size_t l = left_i(node);
-  size_t r = right_i(node);
+  size_t left = left_i(node);
+  size_t right = right_i(node);
   void* array = h->data_array;
 
-  if (h->cmp(array_get(array, parent), array_get(array, l)) == -1 || 
-      h->cmp(array_get(array, parent), array_get(array, r)) == -1)
+/* In the case that the left child index is greater than the length of the array
+ * representing the heap, then the end of the heap has been reached and it is 
+ * safe to return. */ 
+  if (left > h->length)
   {
-    if (h->cmp(array_get(array, l), array_get(array, r)) == 1)
+    return;
+  }
+
+/* If the right child index falls out of the bounds of the heap, only the left
+ * child needs to be check to maintain the heap property. */ 
+  else if (right > h->length)
+  {
+    switch(h->cmp(array_get(array, parent),
+                  array_get(array, left)))
     {
-      array_swap(array, parent, l);
-      if (left_i(l) < h->length)
-      {
-        downheap(h, l);
-      }
+      case -1:
+        array_swap(array, parent, left);
+        downheap(h, left);
+        return;
+      case 1:
+        return;
+      case 0:
+        return;
+      default:
+        printf("Something went wrong in the comparison; exiting...\n");
+        exit(EXIT_FAILURE);
     }
-    else
+  }
+
+/* If this case is reached, it means that the parent node has two children. 
+ * First the two children are compared against each other, and which ever is
+ * is found to be "greater than" due to the comparison function is compared
+ * to the parent. */ 
+  else 
+  {
+    switch(h->cmp(array_get(array, left), array_get(array, right)))
     {
-      array_swap(array, parent, r);
-      if (right_i(r) < h->length)
-      {
-        downheap(h, r);
-      }
+      case 1:
+        if (h->cmp(array_get(array, parent), array_get(array, left)) == -1)
+        {
+          array_swap(array, parent, left);
+          downheap(h, left);
+        }
+        return;
+      case -1:
+        if (h->cmp(array_get(array, parent), array_get(array, right)) == -1)
+        {
+          array_swap(array, parent, right);
+          downheap(h, right);
+        }
+        return;
+      case 0:
+        return;
+      default:
+        printf("Something went wrong in the comparison; exiting...\n");
+        exit(EXIT_FAILURE);
     }
   }
 }
@@ -111,15 +144,18 @@ extern void heap_push(Heap h, void* element)
 
 extern void* heap_pop(Heap h)
 {
-  if (h->length == 0) { return NULL; }
-
-  void* element = malloc(h->elementSize);
-  memcpy(element, array_get(h->data_array, 0), h->elementSize);
-  array_put(h->data_array, 0, array_get(h->data_array, h->length - 1));
-  downheap(h, 0);
-
-  h->length--;
-  return element;
+  if (h->length == 0) 
+  { 
+    return NULL; 
+  }
+  else 
+  {
+    void* element = malloc(h->elementSize);
+    memcpy(element, array_get(h->data_array, 0), h->elementSize);
+    array_put(h->data_array, 0, array_get(h->data_array, --(h->length)));  
+    downheap(h, 0);
+    return element;
+  }
 }
 
 extern void* heap_peek(Heap h)
@@ -138,12 +174,24 @@ extern Heap heapify(void* array,
 
 Array heap_sort(Heap h)
 {
-  Array sorted_array = array_create(h->length, h->elementSize);
-  
-  void* elem;
+  assert(h);
+  if (h->length == 0) 
+  { 
+    return NULL; 
+  }
+  else
+  {
+    Array sorted_array = array_create(h->length, h->elementSize);
+    void* elem = heap_pop(h);
+    size_t i = 0;
 
-  while(h->len) {
-    /* code */
+    while(elem != NULL) {
+      printf("%ld\n", *(long*)array_put(sorted_array, i++, elem));
+      free(elem);
+      elem = heap_pop(h);
+    }
+
+    return sorted_array;
   }
 } 
 
@@ -151,7 +199,4 @@ Array heap_get_array(Heap h)
 {
   return h->data_array;
 }
-
-
-
 

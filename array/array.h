@@ -13,8 +13,6 @@ extern int array_size(Array a);
 extern void *array_get(Array a, size_t i);
 extern void *array_put(Array a, size_t i, void *elem);
 extern void *array_put_auto(Array a, size_t i, void *elem);
-extern void *array_append(Array a, void *elem);
-extern void *array_append_auto(Array a, void *elem);
 
 extern void array_resize(Array a, size_t length);
 extern void array_swap(Array a, size_t i, size_t j);
