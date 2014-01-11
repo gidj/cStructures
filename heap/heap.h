@@ -38,4 +38,8 @@ extern Heap heapify(void* array,
                     int size, 
                     int (*compare)(void*, void*));
 
+
+/* For testing purposes */ 
+#include "../array/array.h"
+extern Array heap_get_array(Heap h);
 #endif

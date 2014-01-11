@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "heap.h"
 #include "../array/array.h"
 
@@ -19,27 +20,26 @@ static size_t right_i(size_t i) { return 2*i + 2; }
 
 static void upheap(Heap h, size_t node)
 {
-  size_t parent = parent_i(node);
-  size_t child = node;
-  
-  switch(h->cmp(array_get(h->data_array, parent),
-                array_get(h->data_array, child)))
+  if (node > 0)
   {
-    case -1:
-      array_swap(h->data_array, parent, child);
+    size_t parent = parent_i(node);
+    size_t child = node;
 
-      if (parent > 0)
-      {
+    switch(h->cmp(array_get(h->data_array, parent),
+                  array_get(h->data_array, child)))
+    {
+      case -1:
+        array_swap(h->data_array, parent, child);
         upheap(h, parent);
-      }
-      return;
-    case 1:
-      return;
-    case 0:
-      return;
-    default:
-      printf("Something went wrong in the comparison; exiting...\n");
-      exit(EXIT_FAILURE);
+        return;
+      case 1:
+        return;
+      case 0:
+        return;
+      default:
+        printf("Something went wrong in the comparison; exiting...\n");
+        exit(EXIT_FAILURE);
+    }
   }
 }
 
@@ -104,12 +104,20 @@ extern void heap_free(Heap *h)
 extern void heap_push(Heap h, void* element)
 {
   assert(h && element);
-
+  array_put_auto(h->data_array, h->length, element);
+  upheap(h, h->length);
+  h->length++;
 }
 
 extern void* heap_pop(Heap h)
 {
+  void* element = malloc(h->elementSize);
+  memcpy(element, array_get(h->data_array, 0), h->elementSize);
+  array_put(h->data_array, 0, array_get(h->data_array, h->length - 1));
+  downheap(h, 0);
 
+  h->length--;
+  return element;
 }
 
 extern void* heap_peek(Heap h)
@@ -123,6 +131,16 @@ extern Heap heapify(void* array,
                     int (*compare)(void*, void*))
 {
 
+}
+
+Array heap_sort(Heap h)
+{
+  Array sorted_array = array_create(h->length, h->elementSize);
+} 
+
+Array heap_get_array(Heap h)
+{
+  return h->data_array;
 }
 
 
