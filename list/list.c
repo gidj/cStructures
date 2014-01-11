@@ -35,7 +35,7 @@ void list_destroy(List *list)
   while((*list)->head) {
     current = (*list)->head;
     (*list)->head = current->next;
-    free(current->data);
+    free(current->dat);
     free(current);
   }
 

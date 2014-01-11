@@ -111,6 +111,8 @@ extern void heap_push(Heap h, void* element)
 
 extern void* heap_pop(Heap h)
 {
+  if (h->length == 0) { return NULL; }
+
   void* element = malloc(h->elementSize);
   memcpy(element, array_get(h->data_array, 0), h->elementSize);
   array_put(h->data_array, 0, array_get(h->data_array, h->length - 1));
@@ -122,6 +124,7 @@ extern void* heap_pop(Heap h)
 
 extern void* heap_peek(Heap h)
 {
+  if (h->length == 0) { return NULL; }
   return array_get(h->data_array, 0);
 }
 
@@ -136,6 +139,12 @@ extern Heap heapify(void* array,
 Array heap_sort(Heap h)
 {
   Array sorted_array = array_create(h->length, h->elementSize);
+  
+  void* elem;
+
+  while(h->len) {
+    /* code */
+  }
 } 
 
 Array heap_get_array(Heap h)
