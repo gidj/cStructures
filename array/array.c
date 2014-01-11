@@ -37,28 +37,28 @@ Array array_create(size_t length, int size)
   return new_array;
 }
 
-void array_free(Array *array)
+void array_free(Array *a)
 {
-  assert(array && *array);
-  if ((*array)->arr)
+  assert(a && *a);
+  if ((*a)->arr)
   {
-    free((*array)->arr);
+    free((*a)->arr);
   }
 
-  free(*array);
-  *array = NULL;
+  free(*a);
+  *a = NULL;
 }
 
-int array_length(Array array)
+int array_length(Array a)
 {
-  assert(array);
-  return array->length;
+  assert(a);
+  return a->length;
 }
 
-int array_size(Array array)
+int array_size(Array a)
 {
-  assert(array);
-  return array->size;
+  assert(a);
+  return a->size;
 }
 
 /* array_get(), array_put(), and array_put_auto() access the underlying array
@@ -69,35 +69,47 @@ int array_size(Array array)
  * the array if given an index that is greater than the current length of the 
  * array. */ 
 
-void *array_get(Array array, size_t i)
+void* array_get(Array a, size_t i)
 {
-  assert(array);
-  assert(i >= 0 && i < array->length);
-  return array->arr + (array->size * i);
+  assert(a);
+  assert(i >= 0 && i < a->length);
+  return a->arr + (a->size * i);
 }
 
-void *array_put(Array array, size_t i, void *elem)
+void* array_put(Array a, size_t i, void *elem)
 {
-  assert(array);
-  assert(i >= 0 && i < array->length);
+  assert(a);
+  assert(i >= 0 && i < a->length);
 
   assert(elem);
-  memcpy(array->arr + (array->size * i), elem, array->size);
+  memcpy(a->arr + (a->size * i), elem, a->size);
   return elem;
 }
 
-void *array_put_auto(Array array, size_t i, void * elem)
+void* array_put_auto(Array a, size_t i, void * elem)
 {
-  assert(array);
+  assert(a);
   assert(elem);
 
-  if (i >= array->length)
+  if (i >= a->length)
   {
-    size_t newLength = (i > array->length*2) ? i : array->length*2;
-    array_resize(array, (newLength));
+    size_t newLength = (i > a->length*2) ? i : a->length*2;
+    array_resize(a, (newLength));
   }
 
-  memcpy(array->arr + (array->size * i), elem, array->size);
+  memcpy(a->arr + (a->size * i), elem, a->size);
+  return elem;
+}
+
+void* array_append(Array a, void *elem)
+{
+  array_put(a, a->length, elem);
+  return elem;
+}
+
+void* array_append_auto(Array a, void *elem)
+{
+  array_put_auto(a, a->length, elem);
   return elem;
 }
 
@@ -106,26 +118,26 @@ void *array_put_auto(Array array, size_t i, void * elem)
  * greater than the old length, the array is expanded to the new length and 
  * the new memory is written over with 0's. */ 
 
-void array_resize(Array array, size_t length)
+void array_resize(Array a, size_t length)
 {
-  assert(array);
+  assert(a);
 
   if (length == 0)
   {
-    free(array->arr);
-    array->arr = NULL;
+    free(a->arr);
+    a->arr = NULL;
   }
-  else if (array->length == 0) 
+  else if (a->length == 0) 
   {
-    array->arr = calloc(length, array->size);
-    assert(array->arr);
+    a->arr = calloc(length, a->size);
+    assert(a->arr);
   }
   else 
   {
-    void* tmp = realloc(array->arr, length*array->size);
+    void* tmp = realloc(a->arr, length*a->size);
     if (tmp)
     {
-      array->arr = tmp;
+      a->arr = tmp;
     }
     else
     {
@@ -133,35 +145,35 @@ void array_resize(Array array, size_t length)
       exit(EXIT_FAILURE);
     }
 
-    array->arr = realloc(array->arr, length*array->size);
+    a->arr = realloc(a->arr, length*a->size);
     
-    if (length > array->length)
+    if (length > a->length)
     {
-      int diff = length - array->length;
-      memset(array->arr + array->length*array->size, 0, diff*array->size);
+      int diff = length - a->length;
+      memset(a->arr + a->length*a->size, 0, diff*a->size);
     }
   }
-  array->length = length;
+  a->length = length;
 }
 
-void array_swap(Array array, size_t i, size_t j)
+void array_swap(Array a, size_t i, size_t j)
 {
-  assert(array);
-  assert(array->arr);
-  assert(i < array->length);
-  assert(j < array->length);
+  assert(a);
+  assert(a->arr);
+  assert(i < a->length);
+  assert(j < a->length);
 
   if (i == j)
   {
     return;
   }
 
-  void *tmp = malloc(array->size);
+  void *tmp = malloc(a->size);
   assert(tmp);
 
-  memcpy(tmp, array_get(array, i), array->size);
-  memcpy(array_get(array, i), array_get(array, j), array->size);
-  memcpy(array_get(array, j), tmp, array->size);
+  memcpy(tmp, array_get(a, i), a->size);
+  memcpy(array_get(a, i), array_get(a, j), a->size);
+  memcpy(array_get(a, j), tmp, a->size);
   
   free(tmp);
 }
