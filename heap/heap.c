@@ -12,11 +12,9 @@ struct Heap {
   int (*cmp)();
 };
 
-/* Helper functions that define the parent and children 'nodes' of the heap */ 
-
-static size_t parent_i(size_t i) { return (i - 1) / 2; }
-static size_t left_i(size_t i) { return 2*i + 1; }
-static size_t right_i(size_t i) { return 2*i + 2; }
+#define parent_i(i) ((i-1)/2) 
+#define left_i(i)   (2*i + 1)
+#define right_i(i)  (2*i + 2)
 
 static void upheap(Heap h, size_t node)
 {
